@@ -5,7 +5,7 @@ const Navbar = () => {
     return (
         <div>
             <AppBar position={'static'}>
-                <Typography variant="h4" sx={{ml: 3, padding:'5px'}}>
+                <Typography variant="h4" sx={{ml: 3, padding:'5px', cursor:'pointer'}}>
                     MoneyMaker
                 </Typography>
             </AppBar>

@@ -1,4 +1,5 @@
 import React from 'react';
+import {useEffect, useState} from "react";
 import {Line} from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -6,30 +7,30 @@ import {
     LinearScale,
     PointElement,
     LineElement,
-    Title,
-    Tooltip,
     Legend,
 } from 'chart.js';
 
-const Chart = () => {
+const Chart = ({price}) => {
+
+    const width = '82%';
+    const height = '90%';
+
     ChartJS.register(
         CategoryScale,
         LinearScale,
         PointElement,
         LineElement,
-        Title,
-        Tooltip,
         Legend,
     );
 
     const options = {
-        labels: [1,2,3],
+
         plugins: {
             legend: {
-                position: 'bottom',
+                display: false,
                 labels: {
                     font: {
-                        size: 15,
+                        size: 14,
                         family: 'Montserrat, sans-serif',
                     },
                 },
@@ -37,29 +38,49 @@ const Chart = () => {
         },
     };
 
-    const data = {
+    const [data, setData] = useState({
+        labels: [],
         datasets: [
             {
-                id: 1,
-                backgroundColor: 'red',
-                borderColor: 'red',
-                label: '11',
-                data: [1,2],
-            },
-            {
-                id: 2,
-                backgroundColor: 'red',
-                borderColor: 'red',
-                label: '112',
-                data: [1,3],
-            },
-        ],
-    }
+                label: 'cost',
+                data: [],
+                fill: false,
+                backgroundColor: 'rgb(75, 192, 192)',
+                borderColor: 'rgb(75, 192, 192)',
+            }
+        ]
+    });
+
+    const generateLabel = () => {
+        const newLabels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        for (let i = 11; i < data.datasets[0].data.length + 1; i++) {
+            newLabels.push(i);
+        }
+        return newLabels;
+    };
+
+    useEffect(() => {
+
+        const interval = setInterval(() => {
+
+            setData(prevData => {
+
+                const newData = {...prevData};
+
+                newData.datasets[0].data.push(price);
+                newData.labels = generateLabel();
+                return newData;
+            });
+
+        }, 1500);
+
+        return () => clearInterval(interval);
+
+    }, [data.datasets[0].data, price]);
 
     return (
-
-        <div style={{width: '90wh', height: '90vh'}}>
-            <Line options={options} data={data}/>
+        <div style={{width: width, height: height}}>
+            <Line options={options} data={data} style={{width: width, height: height}}/>
         </div>
     );
 };
