@@ -1,47 +1,101 @@
-import React, {useState} from 'react';
-import {Box, Button, Container, Grid, Paper, TextField} from "@mui/material";
+import React, {useEffect, useState, useRef} from 'react';
+import {Box, Button, Container, Grid, Paper} from "@mui/material";
+import MoneyIndicator from "./MoneyIndicator";
+import TimeIndicator from "./TimeIndicator";
 
-const Sidebar = ({price}) => {
+const Sidebar = ({price, balance, setBalance}) => {
 
     const [moneyInvest, setMoneyInvest] = useState(50);
-    const [timeInvest, setTimeInvest] = useState(10);
+    const [timeInvest, setTimeInvest] = useState(5);
     const [uPrice, setUPrice] = useState(0);
+    const [progress, setProgress] = useState(false);
+    const [resultText, setResultText] = useState('Make a bet');
 
-    const incrementMoney = () => {
-        if (moneyInvest >= 0) {
-            setMoneyInvest(prevState => prevState + 50);
-        }
-    }
+    const priceRef = useRef(price);
+    const uPriceRef = useRef(0);
 
-    const decrementMoney = () => {
-        if (moneyInvest > 0) {
-            setMoneyInvest(prevState => prevState - 50);
-        }
-    }
-
-    const incrementTime = () => {
-        if (timeInvest >= 0) {
-            setTimeInvest(prevState => prevState + 1);
-        }
-    }
-
-    const decrementTime = () => {
-        if (timeInvest > 0) {
-            setTimeInvest(prevState => prevState - 1);
-        }
-    }
-
-    const inputInvest = (e) => {
-        setMoneyInvest(Number(e.target.value))
-    }
+    useEffect(() => {
+        priceRef.current = price;
+    }, [price]);
 
     const generatePayout = () => {
-        return moneyInvest * 1.5
-    }
+        return moneyInvest * 1.2
+    };
 
-    const savePrice = () => {
-        if (uPrice === 0){
-            setUPrice(price);
+    const savePriceUp = () => {
+
+        if (!progress && timeInvest !== 0 && moneyInvest !== 0) {
+
+            uPriceRef.current = priceRef.current;
+            setUPrice(priceRef.current);
+            setProgress(true);
+            setResultText('Waiting');
+
+            setTimeout(() => {
+
+                checkResultUP();
+                resetSidebar();
+
+            }, timeInvest * 2500)
+        }
+    };
+
+    const savePriceDown = () => {
+
+        if (!progress && timeInvest !== 0 && moneyInvest !== 0) {
+
+            uPriceRef.current = priceRef.current;
+            setUPrice(priceRef.current);
+            setProgress(true);
+            setResultText('Waiting');
+
+            setTimeout(() => {
+
+                checkResultDOWN();
+                resetSidebar();
+
+            }, timeInvest * 2500);
+        }
+    };
+
+    const resetSidebar = () => {
+        setTimeout(() => {
+            setResultText('Make a bet');
+            setUPrice(0);
+        }, 1800);
+    };
+
+    const checkResultUP = () => {
+
+        setProgress(prevState => !prevState);
+
+        if (priceRef.current > uPriceRef.current) {
+
+            setBalance(prev => prev + generatePayout())
+            setResultText('You Won ' + generatePayout());
+
+        } else {
+
+            setBalance(prev => prev - generatePayout())
+            setResultText('You Lose ' + generatePayout());
+
+        }
+    };
+
+    const checkResultDOWN = () => {
+
+        setProgress(prevState => !prevState);
+
+        if (priceRef.current < uPriceRef.current) {
+
+            setBalance(prev => prev + generatePayout())
+            setResultText('You Won ' + generatePayout());
+
+        } else {
+
+            setBalance(prev => prev - generatePayout());
+            setResultText('You Lose ' + generatePayout());
+
         }
     }
 
@@ -55,24 +109,35 @@ const Sidebar = ({price}) => {
                 right: '0',
                 textAlign: 'center'
             }}>
-                <TextField label={'Investment'} size={'small'} value={moneyInvest} margin="normal"
-                           sx={{bgcolor: 'white', borderRadius: '5px'}} onInput={inputInvest}/>
-                <Grid container justifyContent={'center'} gap={'5px'}>
-                    <Button variant="outlined" sx={{width: '39%'}} onClick={incrementMoney}>+</Button>
-                    <Button variant="outlined" sx={{width: '39%'}} onClick={decrementMoney}>-</Button>
-                </Grid>
-                <TextField label={'Time'} size={'small'} value={timeInvest} margin="normal"
-                           sx={{bgcolor: 'white', borderRadius: '5px'}} onInput={inputInvest}/>
-                <Grid container justifyContent={'center'} gap={'5px'}>
-                    <Button variant="outlined" sx={{width: '39%'}} onClick={incrementTime}>+</Button>
-                    <Button variant="outlined" sx={{width: '39%'}} onClick={decrementTime}>-</Button>
-                </Grid>
+                <MoneyIndicator moneyInvest={moneyInvest} balance={balance} setMoneyInvest={setMoneyInvest}
+                                progress={progress}/>
+                <TimeIndicator timeInvest={timeInvest} setTimeInvest={setTimeInvest} progress={progress}/>
 
-                <Paper sx={{width:'224px', height:'80px', marginLeft:'28px', mt: '55px', fontSize:'22px', pt:'5px', boxSizing:'border-box'}}>
+                <Paper sx={{
+                    width: '224px',
+                    height: '80px',
+                    marginLeft: '28px',
+                    mt: '30px',
+                    fontSize: '22px',
+                    pt: '5px',
+                    boxSizing: 'border-box'
+                }}>
                     Your: {uPrice}<br/>Current: {price}
                 </Paper>
 
-                <Grid container sx={{mt: '70px'}} direction={"column"} alignContent={'center'}>
+                <Paper sx={{
+                    width: '224px',
+                    height: '40px',
+                    pt: '5px',
+                    boxSizing: 'border-box',
+                    marginLeft: '28px',
+                    mt: '20px',
+                    fontSize: '22px'
+                }}>
+                    {resultText}
+                </Paper>
+
+                <Grid container sx={{mt: '30px'}} direction={"column"} alignContent={'center'}>
                     <Button variant="outlined" sx={{
                         width: '224px',
                         marginBottom: '10px',
@@ -83,32 +148,26 @@ const Sidebar = ({price}) => {
                             bgcolor: 'rgba(9,171,25,0.87)',
                             color: 'white',
                         },
-                    }}
-                    onClick={savePrice}>Up</Button>
-                    <Paper sx={{width: '224px', height: '65px', fontSize: '23px', marginBottom: '10px'}}>Payout:<br/>{generatePayout()}</Paper>
+                    }} onClick={savePriceUp}>Up</Button>
+                    <Paper sx={{
+                        width: '224px',
+                        height: '65px',
+                        fontSize: '23px',
+                        marginBottom: '10px'
+                    }}>Payout:<br/>{generatePayout()}</Paper>
                     <Button variant="outlined" sx={{
                         width: '224px',
                         backgroundColor: 'red',
                         color: 'white',
                         height: '50px',
                         ':hover': {
-                        bgcolor: 'rgba(255,0,0,0.89)',
-                        color: 'white',
+                            bgcolor: 'rgba(255,0,0,0.89)',
+                            color: 'white',
                         },
-                    }}
-                    onClick={savePrice}>Down</Button>
+                    }} onClick={savePriceDown}>Down</Button>
                 </Grid>
-                <div style={{
-                    position: 'fixed',
-                    bottom: '0',
-                    fontSize: '15px',
-                    width: '280px',
-                    paddingBottom: '10px'
-                }}>Application in passive development
-                </div>
             </Box>
         </Container>
-
     );
 };
 
