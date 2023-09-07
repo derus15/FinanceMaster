@@ -14,7 +14,7 @@ function App() {
 
         const interval = setInterval(() => {
             setPrice(Math.floor(Math.random() * 45) + 1);
-        }, 500)
+        }, 2500)
 
         return () => clearInterval(interval);
 
