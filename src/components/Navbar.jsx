@@ -7,7 +7,7 @@ const Navbar = ({balance}) => {
         <div>
             <AppBar position={'static'}>
                 <Typography variant="h4" sx={{ml: 3, padding:'5px', cursor:'auto',  flexGrow: 1 }}>
-                    MoneyMaker
+                    Finance Master
                 </Typography>
                 <Typography sx={{ position:'absolute', fontSize:'30px', right:'0', padding:'2px', mr:'26px'}}>
                     Balance: {balance}$

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Button, Grid, TextField} from "@mui/material";
+import {StatContext} from "./Sidebar";
 
-const TimeIndicator = ({timeInvest, setTimeInvest, progress}) => {
+const TimeIndicator = () => {
+
+    const {timeInvest, setTimeInvest, progress} = useContext(StatContext);
 
     const incrementTime = () => {
         if (timeInvest >= 0 && !progress) {
@@ -16,7 +19,9 @@ const TimeIndicator = ({timeInvest, setTimeInvest, progress}) => {
     };
 
     const inputInvest = (e) => {
-        setTimeInvest(Number(e.target.value))
+        if (!progress) {
+            setTimeInvest(Number(e.target.value))
+        }
     };
 
     return (

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Button, Grid, TextField} from "@mui/material";
+import {StatContext} from "./Sidebar";
 
-const MoneyIndicator = ({moneyInvest, balance, setMoneyInvest, progress}) => {
+const MoneyIndicator = () => {
+
+    const {moneyInvest, balance, setMoneyInvest, progress} = useContext(StatContext);
 
     const incrementMoney = () => {
 
-        if (moneyInvest > balance - 50){
+        if (moneyInvest > balance - 50) {
             return setMoneyInvest(balance);
         }
         if (moneyInvest >= 0 && !progress && moneyInvest < balance) {
@@ -28,7 +31,7 @@ const MoneyIndicator = ({moneyInvest, balance, setMoneyInvest, progress}) => {
 
     const inputInvest = (e) => {
 
-        if(moneyInvest < balance){
+        if (moneyInvest < balance && !progress) {
             setMoneyInvest(Number(e.target.value))
         }
 

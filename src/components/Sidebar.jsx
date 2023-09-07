@@ -1,7 +1,9 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, createContext} from 'react';
 import {Box, Button, Container, Grid, Paper} from "@mui/material";
 import MoneyIndicator from "./MoneyIndicator";
 import TimeIndicator from "./TimeIndicator";
+
+export const StatContext = createContext();
 
 const Sidebar = ({price, balance, setBalance}) => {
 
@@ -13,6 +15,8 @@ const Sidebar = ({price, balance, setBalance}) => {
 
     const priceRef = useRef(price);
     const uPriceRef = useRef(0);
+
+    const state = {moneyInvest, setMoneyInvest, timeInvest, setTimeInvest, progress, balance}
 
     useEffect(() => {
         priceRef.current = price;
@@ -109,10 +113,10 @@ const Sidebar = ({price, balance, setBalance}) => {
                 right: '0',
                 textAlign: 'center'
             }}>
-                <MoneyIndicator moneyInvest={moneyInvest} balance={balance} setMoneyInvest={setMoneyInvest}
-                                progress={progress}/>
-                <TimeIndicator timeInvest={timeInvest} setTimeInvest={setTimeInvest} progress={progress}/>
-
+                <StatContext.Provider value={state}>
+                    <MoneyIndicator/>
+                    <TimeIndicator/>
+                </StatContext.Provider>
                 <Paper sx={{
                     width: '224px',
                     height: '80px',
