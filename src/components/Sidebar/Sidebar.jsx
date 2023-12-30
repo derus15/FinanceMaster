@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useRef, createContext} from 'react';
-import {Box, Button, Container, Grid, Paper} from "@mui/material";
-import MoneyIndicator from "./MoneyIndicator";
-import TimeIndicator from "./TimeIndicator";
+import {Box, Button, Grid, Paper} from "@mui/material";
+import MoneyIndicator from "../MoneyIndicator";
+import TimeIndicator from "../TimeIndicator";
+import style from './Sidebar.module.css';
 
 export const StatContext = createContext();
 
@@ -104,74 +105,35 @@ const Sidebar = ({price, balance, setBalance}) => {
     }
 
     return (
-        <Container maxWidth="sm">
-            <Box sx={{
-                bgcolor: '#cfe8fc',
-                width: '280px',
-                height: '94vh',
-                position: 'fixed',
-                right: '0',
-                textAlign: 'center'
-            }}>
-                <StatContext.Provider value={state}>
-                    <MoneyIndicator/>
-                    <TimeIndicator/>
-                </StatContext.Provider>
+        <Box className={style.sidebarContainer}>
+            <StatContext.Provider value={state}>
+                <MoneyIndicator/>
+                <TimeIndicator/>
+            </StatContext.Provider>
+
+            <Paper className={style.userScore}>
+                Your: {uPrice}<br/>Current: {price}
+            </Paper>
+
+            <Paper className={style.userScore}>
+                {resultText}
+            </Paper>
+
+            <Grid container sx={{mt: '30px', }} direction={"column"} alignContent={'center'}>
+                <Button variant="contained" color="success" onClick={savePriceUp}>
+                    Up
+                </Button>
                 <Paper sx={{
                     width: '224px',
-                    height: '80px',
-                    marginLeft: '28px',
-                    mt: '30px',
-                    fontSize: '22px',
-                    pt: '5px',
-                    boxSizing: 'border-box'
+                    height: '65px',
+                    mb: '10px',
+                    mt:'10px'
                 }}>
-                    Your: {uPrice}<br/>Current: {price}
+                    Payout:<br/>{generatePayout()}
                 </Paper>
-
-                <Paper sx={{
-                    width: '224px',
-                    height: '40px',
-                    pt: '5px',
-                    boxSizing: 'border-box',
-                    marginLeft: '28px',
-                    mt: '20px',
-                    fontSize: '22px'
-                }}>
-                    {resultText}
-                </Paper>
-
-                <Grid container sx={{mt: '30px'}} direction={"column"} alignContent={'center'}>
-                    <Button variant="outlined" sx={{
-                        width: '224px',
-                        marginBottom: '10px',
-                        bgcolor: '#09AB19FF',
-                        color: 'white',
-                        height: '50px',
-                        ':hover': {
-                            bgcolor: 'rgba(9,171,25,0.87)',
-                            color: 'white',
-                        },
-                    }} onClick={savePriceUp}>Up</Button>
-                    <Paper sx={{
-                        width: '224px',
-                        height: '65px',
-                        fontSize: '23px',
-                        marginBottom: '10px'
-                    }}>Payout:<br/>{generatePayout()}</Paper>
-                    <Button variant="outlined" sx={{
-                        width: '224px',
-                        backgroundColor: 'red',
-                        color: 'white',
-                        height: '50px',
-                        ':hover': {
-                            bgcolor: 'rgba(255,0,0,0.89)',
-                            color: 'white',
-                        },
-                    }} onClick={savePriceDown}>Down</Button>
-                </Grid>
-            </Box>
-        </Container>
+                <Button variant="contained" color='error' onClick={savePriceDown}>Down</Button>
+            </Grid>
+        </Box>
     );
 };
 

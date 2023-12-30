@@ -55,7 +55,7 @@ const Chart = ({price}) => {
 
     const generateLabel = () => {
 
-        const newLabels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 'n - 1', 'n'];
+        const newLabels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
         for (let i = 11; i < data.datasets[0].data.length + 1; i++) {
             newLabels.push(i);

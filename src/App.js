@@ -1,7 +1,7 @@
 import './App.css';
 import {Box} from "@mui/material";
 import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Sidebar/Sidebar";
 import Chart from "./components/Charts/Chart";
 import {useEffect, useState} from "react";
 

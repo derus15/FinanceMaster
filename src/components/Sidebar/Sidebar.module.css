@@ -1,0 +1,18 @@
+.sidebarContainer {
+    background: #cfe8fc;
+    width: 280px;
+    height: 94vh;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 22px;
+}
+
+.userScore {
+    width: 224px;
+    height: 70px;
+    margin-left: 28px;
+    margin-top: 30px;
+    padding-top: 5px;
+}
