@@ -1,6 +1,6 @@
 import './App.css';
 import {Box} from "@mui/material";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Chart from "./components/Charts/Chart";
 import {useEffect, useState} from "react";
@@ -21,7 +21,7 @@ function App() {
     }, [price])
 
     return (
-        <Box sx={{flexGrow: 1}}>
+        <Box className={'container'}>
             <Navbar balance={balance}/>
             <Sidebar price={price} balance={balance} setBalance={setBalance}/>
             <Chart price={price}/>

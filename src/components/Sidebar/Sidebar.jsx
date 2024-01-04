@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef, createContext} from 'react';
 import {Box, Button, Grid, Paper} from "@mui/material";
-import MoneyIndicator from "../MoneyIndicator";
-import TimeIndicator from "../TimeIndicator";
+import MoneyIndicator from "../Indicators/MoneyIndicator";
+import TimeIndicator from "../Indicators/TimeIndicator";
 import style from './Sidebar.module.css';
 
 export const StatContext = createContext();
@@ -23,8 +23,17 @@ const Sidebar = ({price, balance, setBalance}) => {
         priceRef.current = price;
     }, [price]);
 
-    const generatePayout = () => {
-        return moneyInvest * 1.2
+    const checkResult = (direction) => {
+        setProgress(prevState => !prevState);
+
+        if ((direction === 'UP' && priceRef.current > uPriceRef.current) ||
+            (direction === 'DOWN' && priceRef.current < uPriceRef.current)) {
+            setBalance(prev => prev + moneyInvest);
+            setResultText('You Won ' + moneyInvest);
+        } else {
+            setBalance(prev => prev - moneyInvest);
+            setResultText('You Lose ' + moneyInvest);
+        }
     };
 
     const savePriceUp = () => {
@@ -38,7 +47,7 @@ const Sidebar = ({price, balance, setBalance}) => {
 
             setTimeout(() => {
 
-                checkResultUP();
+                checkResult('UP');
                 resetSidebar();
 
             }, timeInvest * 2500)
@@ -56,7 +65,8 @@ const Sidebar = ({price, balance, setBalance}) => {
 
             setTimeout(() => {
 
-                checkResultDOWN();
+                checkResult('DOWN');
+                setMoneyInvest(0);
                 resetSidebar();
 
             }, timeInvest * 2500);
@@ -67,42 +77,8 @@ const Sidebar = ({price, balance, setBalance}) => {
         setTimeout(() => {
             setResultText('Make a bet');
             setUPrice(0);
-        }, 1800);
+        }, 1500);
     };
-
-    const checkResultUP = () => {
-
-        setProgress(prevState => !prevState);
-
-        if (priceRef.current > uPriceRef.current) {
-
-            setBalance(prev => prev + generatePayout())
-            setResultText('You Won ' + generatePayout());
-
-        } else {
-
-            setBalance(prev => prev - generatePayout())
-            setResultText('You Lose ' + generatePayout());
-
-        }
-    };
-
-    const checkResultDOWN = () => {
-
-        setProgress(prevState => !prevState);
-
-        if (priceRef.current < uPriceRef.current) {
-
-            setBalance(prev => prev + generatePayout())
-            setResultText('You Won ' + generatePayout());
-
-        } else {
-
-            setBalance(prev => prev - generatePayout());
-            setResultText('You Lose ' + generatePayout());
-
-        }
-    }
 
     return (
         <Box className={style.sidebarContainer}>
@@ -115,11 +91,11 @@ const Sidebar = ({price, balance, setBalance}) => {
                 Your: {uPrice}<br/>Current: {price}
             </Paper>
 
-            <Paper className={style.userScore}>
+            <Paper className={style.userScore} sx={{height: '45px'}}>
                 {resultText}
             </Paper>
 
-            <Grid container sx={{mt: '30px', }} direction={"column"} alignContent={'center'}>
+            <Grid container sx={{mt: '20%'}} direction={"column"} alignContent={'center'}>
                 <Button variant="contained" color="success" onClick={savePriceUp}>
                     Up
                 </Button>
@@ -129,7 +105,7 @@ const Sidebar = ({price, balance, setBalance}) => {
                     mb: '10px',
                     mt:'10px'
                 }}>
-                    Payout:<br/>{generatePayout()}
+                    Payout:<br/>{moneyInvest}
                 </Paper>
                 <Button variant="contained" color='error' onClick={savePriceDown}>Down</Button>
             </Grid>

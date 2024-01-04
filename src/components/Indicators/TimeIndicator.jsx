@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Button, Grid, TextField} from "@mui/material";
-import {StatContext} from "./Sidebar/Sidebar";
+import {StatContext} from "../Sidebar/Sidebar";
 
 const TimeIndicator = () => {
 
